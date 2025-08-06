@@ -85,11 +85,12 @@ python app.py
 📄 License & Disclaimer
 This tool is for educational and authorized use only. Do not use in production without proper permission.
 
-© 2025 — Yousef Emad Sabouba
+© 2025 — Yousef Emad Sabouba / Yousef Alshaikh Yassin
 
-👨‍💻 Author
+👨‍💻 Authors
 Yousef Emad Sabouba
 Cybersecurity Graduate | AD Security | https://www.linkedin.com/in/sab0uba/
+Yousef Marwan Alshaikh | DFIR | https://www.linkedin.com/in/y-alshaikh/
 ---
 
 Would you like me to:
