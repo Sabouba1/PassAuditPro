@@ -2,7 +2,7 @@
 
 DC_IP = '127.0.0.1'
 LDAP_USER = 'MYDOMAIN\\Administrator'
-PASSWORD = 'Emad2002'
+PASSWORD = 'saboubasabouba'
 BASE_DN = 'dc=mydomain,dc=local'
 
 # config.py
