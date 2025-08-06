@@ -88,18 +88,10 @@ This tool is for educational and authorized use only. Do not use in production w
 © 2025 — Yousef Emad Sabouba / Yousef Alshaikh Yassin
 
 👨‍💻 Authors
-Yousef Emad Sabouba
-Cybersecurity Graduate | AD Security | https://www.linkedin.com/in/sab0uba/
 
-Yousef Marwan Alshaikh | DFIR | https://www.linkedin.com/in/y-alshaikh/
----
+Yousef Emad Sabouba - Cybersecurity Graduate | AD Security | https://www.linkedin.com/in/sab0uba/
 
-Would you like me to:
+Yousef Marwan Alshaikh - Cybersecurity Graduate | DFIR | https://www.linkedin.com/in/y-alshaikh/
 
-- Add a clean `requirements.txt` for all modules?
-- Suggest screenshots to include in the repo?
-- Help deploy it on a local server or cloud?
-
-Let me know what’s next 💪
 
 
