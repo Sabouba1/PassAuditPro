@@ -89,7 +89,7 @@ This tool is for educational and authorized use only. Do not use in production w
 
 👨‍💻 Author
 Yousef Emad Sabouba
-Cybersecurity Graduate | AD Security | 
+Cybersecurity Graduate | AD Security | https://www.linkedin.com/in/sab0uba/
 ---
 
 Would you like me to:
