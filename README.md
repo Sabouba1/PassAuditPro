@@ -90,6 +90,7 @@ This tool is for educational and authorized use only. Do not use in production w
 👨‍💻 Authors
 Yousef Emad Sabouba
 Cybersecurity Graduate | AD Security | https://www.linkedin.com/in/sab0uba/
+
 Yousef Marwan Alshaikh | DFIR | https://www.linkedin.com/in/y-alshaikh/
 ---
 
