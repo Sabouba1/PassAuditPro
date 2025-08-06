@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AD Password Audit - HTML Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gradient: linear-gradient(135deg, #667eea, #764ba2);
+      --glass: rgba(255, 255, 255, 0.05);
+      --danger: #ef5350;
+      --warning: #ffca28;
+      --success: #10b981;
+      --gray: #9e9e9e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at center, #1a1a2e, #0f0c29);
+      color: #f3f4f6;
+      padding: 40px;
+    }
+
+    h1, h3, h4 {
+      text-align: center;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+
+    .section {
+      background: var(--glass);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    thead {
+      background: rgba(255,255,255,0.08);
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .risk-box {
+      background: rgba(255,255,255,0.04);
+      padding: 1rem;
+      border-left: 5px solid #b285ff;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .summary-table td {
+      padding: 0.8rem 1rem;
+    }
+
+    ul li {
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+
+    .download-btn-wrapper {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .download-btn-wrapper button {
+      padding: 10px 20px;
+      border-radius: 30px;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .download-btn-wrapper button:hover {
+      opacity: 0.9;
+    }
+
+    .status-badge {
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    .badge-weak { background: var(--danger); color: #fff; }
+    .badge-medium { background: var(--warning); color: #000; }
+    .badge-strong { background: var(--success); color: #fff; }
+    .badge-uncracked { background: var(--gray); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="download-btn-wrapper">
+    <button onclick="downloadHTML()">⬇ Download HTML Report</button>
+  </div>
+
+  <h1>AD Password Audit Report</h1>
+
+  <div class="section">
+    <h3>Executive Summary</h3>
+    <table class="summary-table">
+      <tr><td><strong>Total Users Evaluated</strong></td><td>{{ total }}</td></tr>
+      <tr><td><strong>Cracked Passwords</strong></td><td>{{ cracked_pct }}%</td></tr>
+      <tr><td><strong>Weak Passwords</strong></td><td>{{ weak_pct }}%</td></tr>
+    </table>
+
+    <h4 class="mt-4">Top Identified Risks</h4>
+    {% for risk in risks %}
+      <div class="risk-box">{{ risk }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="section">
+    <h3>Password Policy vs Best Practice</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Policy Item</th>
+          <th>Current Value</th>
+          <th>Best Practice</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in policy_table %}
+          <tr>
+            <td>{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h4>Best Practice Compliance</h4>
+    <ul>
+      {% for item in compliance %}
+        <li class="{{ 'text-danger' if '❌' in item else 'text-success' }}">{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="section">
+    <h4>Cracked Password Evaluation</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Status</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in results %}
+          <tr>
+            <td style="color:#b285ff; font-weight:600;">{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>
+              {% if row[2] == 'Weak' %}
+                <span class="status-badge badge-weak">Weak</span>
+              {% elif row[2] == 'Fair' %}
+                <span class="status-badge badge-medium">Fair</span>
+              {% elif row[2] == 'Strong' %}
+                <span class="status-badge badge-strong">Strong</span>
+              {% elif row[2] == 'Very Strong' %}
+                <span class="status-badge badge-strong">Very Strong</span>
+              {% else %}
+                <span class="status-badge badge-uncracked">Uncracked</span>
+              {% endif %}
+            </td>
+            <td>{{ row[3] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function downloadHTML() {
+      const blob = new Blob([document.documentElement.outerHTML], { type: "text/html" });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = "AD_HTML_Report.html";
+      link.click();
+    }
+  </script>
+</body>
+</html>

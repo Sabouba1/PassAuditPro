@@ -1,0 +1,298 @@
+<!-- ✅ Updated policy.html (Dashboard Style) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Policy | PassAudit Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+      --glass: rgba(255, 255, 255, 0.05);
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at top, #1a1a2e 0%, #0f0c29 100%);
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    nav {
+      width: 260px;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-logo {
+      width: 60px;
+      height: 60px;
+      background: var(--primary-gradient);
+      border-radius: 16px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    nav a i {
+      width: 20px;
+      text-align: center;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    button {
+      padding: 0.75rem 1.4rem;
+      border-radius: 12px;
+      border: none;
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .section {
+      background: var(--glass);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .policy-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .policy-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .policy-table td:first-child {
+      font-weight: 600;
+      width: 50%;
+      color: #ccc;
+    }
+
+    ul.checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul.checklist li {
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+
+    canvas {
+      background: rgba(255,255,255,0.03);
+      padding: 1rem;
+      border-radius: 12px;
+      max-width: 300px;
+      width: 100% !important;
+    }
+
+    .flex-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .flex-grid > div {
+      flex: 1;
+      min-width: 280px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-header">
+      <div class="nav-logo"><i class="fas fa-shield-halved"></i></div>
+      <div class="nav-title">PassAudit Pro</div>
+    </div>
+    <a href="/"><i class="fas fa-house"></i> Home</a>
+    <a href="/users"><i class="fas fa-users"></i> Users</a>
+    <a href="/evaluate"><i class="fas fa-key"></i> Evaluate</a>
+    <a href="/policy" class="active"><i class="fas fa-file-contract"></i> Policy</a>
+    <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+  </nav>
+
+  <main>
+    <h1>Domain Password Policy</h1>
+    <div class="header-buttons">
+      <button onclick="loadPolicy()" style="background: linear-gradient(to right, #00bcd4, #3f51b5);">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
+      <button onclick="applyRecommended()" style="background: linear-gradient(to right, #10b981, #059669);">
+        <i class="fas fa-wrench"></i> Apply Best Practice
+      </button>
+</div>
+
+    <div class="section">
+      <table class="policy-table" id="policyTable"></table>
+    </div>
+
+    <div class="section flex-grid">
+      <div>
+        <h3 style="margin-bottom: 1rem;">Best Practice Compliance</h3>
+        <ul class="checklist" id="complianceList"></ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 1rem;">Compliance Chart</h3>
+        <canvas id="complianceChart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let compChart = null;
+
+    async function loadPolicy() {
+      try {
+        const res = await fetch('/api/policy?_t=' + new Date().getTime());
+        const data = await res.json();
+
+        const table = document.getElementById('policyTable');
+        table.innerHTML = '';
+        data.policy.split('\n').forEach(line => {
+          const [key, value] = line.split(':');
+          if (key && value) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key.trim()}</td><td>${value.trim()}</td>`;
+            table.appendChild(row);
+          }
+        });
+
+        const list = document.getElementById('complianceList');
+        list.innerHTML = '';
+        let pass = 0;
+        data.compliance.forEach(item => {
+          const li = document.createElement('li');
+          const isPass = item.includes("✅");
+          li.className = isPass ? 'text-success' : 'text-danger';
+          li.innerHTML = isPass
+            ? `✅ ${item.replace("✅", "").trim()}`
+            : `❌ ${item.replace("❌", "").trim()}`;
+          list.appendChild(li);
+          if (isPass) pass++;
+        });
+
+        drawChart(pass, data.compliance.length - pass);
+      } catch (err) {
+        console.error("Failed to load policy:", err);
+        alert("❌ Could not load policy data.");
+      }
+    }
+
+    function drawChart(pass, fail) {
+      const ctx = document.getElementById('complianceChart').getContext('2d');
+      if (compChart) compChart.destroy();
+      compChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Compliant', 'Non-compliant'],
+          datasets: [{
+            data: [pass, fail],
+            backgroundColor: ['#10b981', '#ef4444'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '65%',
+          plugins: {
+            legend: { labels: { color: '#fff' } }
+          }
+        }
+      });
+    }
+
+    function applyRecommended() {
+      if (confirm("⚠️ This will change the domain password policy.\nAre you sure?")) {
+        fetch('/api/apply-best-policy', { method: 'POST' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            loadPolicy();
+          })
+          .catch(() => {
+            alert("❌ Failed to apply best-practice policy.");
+          });
+      }
+    }
+
+    window.onload = loadPolicy;
+  </script>
+</body>
+</html>

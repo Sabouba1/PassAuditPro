@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard | AD Password Audit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --glass: rgba(255, 255, 255, 0.05);
+      --neon-cyan: #00f5ff;
+      --neon-purple: #8a2be2;
+      --danger: #ff4757;
+      --success: #00ff88;
+      --warning: #ffaa00;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at top, #1a1a2e 0%, #0f0c29 100%);
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      width: 260px;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    nav .nav-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-logo {
+      width: 60px;
+      height: 60px;
+      background: var(--primary-gradient);
+      border-radius: 16px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    nav a i {
+      width: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-header">
+      <div class="nav-logo"><i class="fas fa-shield-halved"></i></div>
+      <div class="nav-title">PassAudit Pro</div>
+    </div>
+    <a href="/"><i class="fas fa-house"></i> Home</a>
+    <a href="/users"><i class="fas fa-users"></i> Users</a>
+    <a href="/evaluate"><i class="fas fa-key"></i> Evaluate</a>
+    <a href="/policy"><i class="fas fa-file-contract"></i> Policy</a>
+    <a href="/dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+  </nav>
+  <main style="flex: 1; padding: 2rem 3rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 2rem;
+               background: var(--primary-gradient);
+               -webkit-background-clip: text;
+               -webkit-text-fill-color: transparent;">
+      Security Dashboard Overview
+    </h1>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+      <div class="kpi" style="
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        padding: 2rem;
+        border-radius: 18px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+        <h4 style="color: #ccc; font-weight: 600; margin-bottom: 1rem;">Weak Passwords</h4>
+        <div class="value" id="weakPct" style="
+          font-size: 2.8rem;
+          font-weight: 900;
+          color: #07a1e9;">--%</div>
+      </div>
+
+      <div class="kpi" style="
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        padding: 2rem;
+        border-radius: 18px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+        <h4 style="color: #ccc; font-weight: 600; margin-bottom: 1rem;">High Risk Users</h4>
+        <div class="value" id="highRisk" style="
+          font-size: 2.8rem;
+          font-weight: 900;
+          background: linear-gradient(135deg, var(--warning), var(--danger));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;">--</div>
+      </div>
+
+      <div class="kpi" style="
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        padding: 2rem;
+        border-radius: 18px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+        <h4 style="color: #ccc; font-weight: 600; margin-bottom: 1rem;">Total Evaluated Users</h4>
+        <div class="value" id="totalUsers" style="
+          font-size: 2.8rem;
+          font-weight: 900;
+          background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;">--</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2.5rem;">
+      <div style="background: var(--glass); padding: 2rem; border-radius: 20px; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="text-align: center; margin-bottom: 1rem;">Password Strength Distribution</h4>
+        <canvas id="strengthChart" height="280"></canvas>
+      </div>
+
+      <div style="background: var(--glass); padding: 2rem; border-radius: 20px; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <h4 style="margin-bottom: 1rem;">User Risk Levels</h4>
+        <canvas id="riskChart" height="280"></canvas>
+        <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; align-items: center;">
+          <a href="/generate-report" class="gradient-btn" style="padding: 0.8rem 1.6rem; border-radius: 30px; background: var(--primary-gradient); text-decoration: none; color: white; font-weight: 600;">
+            <i class="fas fa-file-pdf"></i> Export PDF
+          </a>
+          <a href="/generate-html-report" class="gradient-btn" style="padding: 0.8rem 1.6rem; border-radius: 30px; background: var(--primary-gradient); text-decoration: none; color: white; font-weight: 600;">
+            <i class="fas fa-globe"></i> Export HTML
+          </a>
+        </div>
+      </div>
+    </div>
+<script>
+  Chart.register(ChartDataLabels);
+  // Animate Numbers
+  function animateValue(id, start, end, duration = 2000, suffix = '') {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    let startTime = null;
+    const step = timestamp => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const value = Math.floor(progress * (end - start) + start);
+      el.textContent = value + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // Load Evaluation Data
+  fetch('/static/data/eval_results.json')
+    .then(res => res.json())
+    .then(data => {
+      let weak = 0, highRisk = 0, total = data.length;
+      const countByStrength = { Weak: 0, Fair: 0, Strong: 0, "Very Strong": 0, Uncracked: 0 };
+      const riskScores = [];
+
+      data.forEach(([user, pass, status, score]) => {
+        countByStrength[status] = (countByStrength[status] || 0) + 1;
+        if (status === 'Weak') weak++;
+
+        if (status !== 'Uncracked') {
+          let risk = 0;
+          if (status === 'Weak') risk += 5;
+          else if (status === 'Fair') risk += 2;
+          else if (status === 'Strong') risk += 1;
+          if (pass.toLowerCase().includes(user.toLowerCase())) risk += 3;
+          if (risk >= 5) highRisk++;
+          riskScores.push({ user, risk });
+        }
+      });
+
+      animateValue('weakPct', 0, Math.round((weak / total) * 100), 2000, '%');
+      animateValue('highRisk', 0, highRisk, 2000);
+      animateValue('totalUsers', 0, total, 2000);
+
+      new Chart(document.getElementById('strengthChart'), {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(countByStrength),
+          datasets: [{
+            data: Object.values(countByStrength),
+            backgroundColor: ["#ef5350", "#ffca28", "#66bb6a", "#8a2be2", "#9e9e9e"],
+            borderColor: "#fafafa",          // ← black borders
+            borderWidth: 0                // ← thickness of borders
+          }]
+        },
+        options: {
+          cutout: '65%',
+          plugins: {
+            legend: { labels: { color: '#fff' } },
+            title: { display: true, text: 'Password Strengths', color: '#fff' },
+            datalabels: {
+              color: '#fff',
+              font: { weight: 'bold', size: 13 },
+              formatter: (value, ctx) => {
+                const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                return total ? Math.round((value / total) * 100) + "%" : "0%";
+              }
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+
+      new Chart(document.getElementById('riskChart'), {
+        type: 'bar',
+        data: {
+          labels: riskScores.map(r => r.user),
+          datasets: [{
+            label: 'Risk Score',
+            data: riskScores.map(r => r.risk),
+            backgroundColor: '#f44336',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `Risk Score: ${ctx.raw}`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+            y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' }, beginAtZero: true }
+          }
+        }
+      });
+    })
+    .catch(err => {
+      console.warn('Error loading dashboard data:', err);
+    });
+</script>
+<script>
+  // Add interactive glowing particles
+  document.addEventListener('mousemove', function (e) {
+    if (Math.random() > 0.94) createParticle(e.clientX, e.clientY);
+  });
+
+  function createParticle(x, y) {
+    const p = document.createElement('div');
+    p.style.cssText = `
+      position: fixed;
+      left: ${x}px;
+      top: ${y}px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+      pointer-events: none;
+      opacity: 1;
+      z-index: 9999;
+      animation: floatUp 1.8s ease-out forwards;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1800);
+  }
+
+  // Inject float animation style
+  const styleTag = document.createElement('style');
+  styleTag.textContent = `
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0.2); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(styleTag);
+</script>
+<div class="floating-stats" style="
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  z-index: 999;
+  font-size: 0.9rem;
+">
+  <div style="
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    padding: 0.7rem 1.2rem;
+    border-radius: 40px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #00ff88;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  ">
+    <i class="fas fa-clock"></i> Last updated: <span id="updateTime">just now</span>
+  </div>
+  <div style="
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    padding: 0.7rem 1.2rem;
+    border-radius: 40px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #00f5ff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  ">
+    <i class="fas fa-wifi"></i> System Online
+  </div>
+</div>
+
+<script>
+  // Optional dynamic timestamp
+  const updateTime = document.getElementById('updateTime');
+  if (updateTime) {
+    const now = new Date();
+    updateTime.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+</script>
+</body>
+</html>

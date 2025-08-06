@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome | PassAudit Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: black;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      color: white;
+      text-align: center;
+      padding: 40px;
+      max-width: 400px;
+      margin: 10vh auto;
+    }
+
+    .glass-card h1 {
+      margin-top: 15px;
+    }
+
+    .logo {
+      max-width: 80px;
+    }
+
+    .glass-card button {
+      font-weight: 600;
+      padding: 12px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      width: 100%;
+    }
+
+    .glass-card button:hover {
+      transform: scale(1.03);
+      background: linear-gradient(135deg, #5a67d8, #6b46c1);
+    }
+
+    #settingsBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      cursor: pointer;
+    }
+
+    .settings-modal {
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
+
+    .settings-modal .modal-content {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      width: 90%;
+      max-width: 500px;
+      backdrop-filter: blur(16px);
+    }
+
+    .settings-modal .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+
+    .settings-modal .modal-content input::placeholder {
+      color: #ccc;
+    }
+
+    .settings-modal .modal-content label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .modal-content .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .settings-modal .modal-content .button-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 15px;
+    }
+
+    .settings-modal .modal-content .secondary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .settings-modal .modal-content button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn-apply {
+      background: linear-gradient(to right, #10b981, #059669);
+    }
+
+    .btn-ok {
+      background: linear-gradient(to right, #6366f1, #7c3aed);
+    }
+
+    .btn-test {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-reset {
+      background: #ef4444;
+    }
+
+    .settings-modal .modal-content button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+
+  <button id="settingsBtn" onclick="toggleSettings()">
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <div class="glass-card">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+    <h1>PassAudit Pro</h1>
+    <button onclick="startTool()">Launch</button>
+  </div>
+
+  <div id="settingsModal" style="display:none;" class="settings-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="toggleSettings()">&times;</button>
+      <h3 style="margin-top: 1.5rem;">Configuration Settings</h3>
+
+      <label>Domain Controller IP:</label>
+      <input type="text" id="dcIpInput" placeholder="e.g. 192.168.1.1">
+
+      <label>LDAP Username:</label>
+      <input type="text" id="ldapUserInput" placeholder="DOMAIN\\Administrator">
+
+      <label>Password:</label>
+      <input type="password" id="passwordInput">
+
+      <label>Base DN:</label>
+      <input type="text" id="baseDnInput" placeholder="e.g. dc=domain,dc=local">
+
+      <div class="button-row">
+        <button class="btn-apply" onclick="applySettings()">✅ Apply</button>
+        <button class="btn-ok" onclick="okSettings()">🆗 OK</button>
+      </div>
+
+      <div class="secondary-row">
+        <button class="btn-test" onclick="testConnection()">🧪 Test Connection</button>
+        <button class="btn-reset" onclick="resetSettings()">♻️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSettings() {
+      const modal = document.getElementById("settingsModal");
+      if (modal.style.display === "none") {
+        fetch('/api/current-config')
+          .then(res => res.json())
+          .then(cfg => {
+            document.getElementById('dcIpInput').value = cfg.DC_IP || '';
+            document.getElementById('ldapUserInput').value = cfg.LDAP_USER || '';
+            document.getElementById('passwordInput').value = cfg.PASSWORD || '';
+            document.getElementById('baseDnInput').value = cfg.BASE_DN || '';
+          });
+        modal.style.display = "flex";
+      } else {
+        modal.style.display = "none";
+      }
+    }
+
+    function saveSettings(closeAfter = false) {
+      const config = {
+        dc_ip: document.getElementById('dcIpInput').value,
+        ldap_user: document.getElementById('ldapUserInput').value,
+        password: document.getElementById('passwordInput').value,
+        base_dn: document.getElementById('baseDnInput').value
+      };
+
+      fetch('/set-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("✅ Settings saved.");
+          if (closeAfter) toggleSettings();
+        } else {
+          alert("❌ Failed to save settings.");
+        }
+      })
+      .catch(() => {
+        alert("❌ Error sending settings to server.");
+      });
+    }
+
+    function applySettings() {
+      saveSettings(false);
+    }
+
+    function okSettings() {
+      saveSettings(true);
+    }
+
+    function testConnection() {
+      fetch('/api/users')
+        .then(res => {
+          if (!res.ok) {
+            return res.json().then(data => {
+              throw new Error(data.error || "Unknown error.");
+            });
+          }
+          return res.json();
+        })
+        .then(() => {
+          alert("✅ Connection successful! Users retrieved.");
+        })
+        .catch(err => {
+          alert("❌ Connection failed: " + err.message);
+        });
+    }
+
+    function resetSettings() {
+      fetch('/set-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dc_ip: '',
+          ldap_user: '',
+          password: '',
+          base_dn: ''
+        })
+      })
+      .then(() => {
+        document.getElementById('dcIpInput').value = '';
+        document.getElementById('ldapUserInput').value = '';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('baseDnInput').value = '';
+        alert("♻️ Configuration has been reset.");
+      });
+    }
+
+    function startTool() {
+      fetch('/api/current-config')
+        .then(res => res.json())
+        .then(cfg => {
+          if (!cfg || !cfg.DC_IP || !cfg.LDAP_USER || !cfg.PASSWORD || !cfg.BASE_DN) {
+            alert("⚠️ Please configure Active Directory settings first.");
+          } else {
+            window.location.href = "/dashboard";
+          }
+        });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Users | PassAudit Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+      --glass: rgba(255, 255, 255, 0.05);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at top, #1a1a2e 0%, #0f0c29 100%);
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    nav {
+      width: 260px;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-logo {
+      width: 60px;
+      height: 60px;
+      background: var(--primary-gradient);
+      border-radius: 16px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    nav a i {
+      width: 20px;
+      text-align: center;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem 3rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .controls input,
+    .controls select {
+      padding: 0.75rem 1.2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      flex: 1;
+    }
+
+    .controls button {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      opacity: 0.9;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 48px;
+      right: 0;
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      min-width: 200px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 16px;
+      color: #eee;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #2a2a3d;
+    }
+
+    .apply-btn {
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--glass);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      background: rgba(255,255,255,0.08);
+      font-size: 0.85rem;
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .badge {
+      padding: 0.3rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-header">
+      <div class="nav-logo"><i class="fas fa-shield-halved"></i></div>
+      <div class="nav-title">PassAudit Pro</div>
+    </div>
+    <a href="/"><i class="fas fa-house"></i> Home</a>
+    <a href="/users" class="active"><i class="fas fa-users"></i> Users</a>
+    <a href="/evaluate"><i class="fas fa-key"></i> Evaluate</a>
+    <a href="/policy"><i class="fas fa-file-contract"></i> Policy</a>
+    <a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+  </nav>
+
+  <main>
+    <h1>Active Directory Users</h1>
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search users..." />
+      <select id="ouFilter"><option value="">All OUs</option></select>
+      <div class="dropdown">
+        <button onclick="toggleMenu()">Enforce Options</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a onclick="selectAllUsers()">Select All</a>
+          <a onclick="selectCrackedUsers()">Cracked Passwords</a>
+          <a onclick="enableManualSelection()">Manual Select</a>
+          <a onclick="clearSelection()">Clear</a>
+        </div>
+      </div>
+      <button class="apply-btn" id="applyBtn" onclick="applyReset()">Apply Reset</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th></th><th>Username</th><th>Full Name</th><th>OU</th><th>Last Login</th><th>Password Set</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody"><tr><td colspan="6">Loading...</td></tr></tbody>
+    </table>
+  </main>
+
+  <script>
+    let allUsers = [];
+    let crackedUsers = [];
+
+    function toggleMenu() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showApplyBtn() {
+      document.getElementById('applyBtn').style.display = 'inline-block';
+    }
+
+    function selectAllUsers() {
+      document.querySelectorAll('.userCheckbox').forEach(cb => {
+        cb.checked = true;
+        cb.style.display = 'inline-block';
+      });
+      showApplyBtn();
+    }
+
+    function enableManualSelection() {
+      document.querySelectorAll('.userCheckbox').forEach(cb => cb.style.display = 'inline-block');
+      showApplyBtn();
+    }
+
+    function selectCrackedUsers() {
+      fetch('/static/data/eval_results.json')
+        .then(res => res.json())
+        .then(data => {
+          crackedUsers = data.filter(r => r[2] !== 'Uncracked').map(r => r[0]);
+          document.querySelectorAll('.userCheckbox').forEach(cb => {
+            cb.style.display = 'inline-block';
+            cb.checked = crackedUsers.includes(cb.dataset.username);
+          });
+          showApplyBtn();
+        })
+        .catch(() => alert("Failed to load cracked user data."));
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.userCheckbox').forEach(cb => {
+        cb.checked = false;
+        cb.style.display = 'none';
+      });
+      document.getElementById('applyBtn').style.display = 'none';
+    }
+
+    function applyReset() {
+      const selected = Array.from(document.querySelectorAll('.userCheckbox'))
+        .filter(cb => cb.checked)
+        .map(cb => cb.dataset.username);
+
+      if (selected.length === 0) {
+        alert("No users selected.");
+        return;
+      }
+
+      fetch('/api/enforce-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ users: selected })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          document.getElementById('applyBtn').style.display = 'none';
+        })
+        .catch(() => alert("Error applying reset."));
+    }
+
+    function renderUsers(data) {
+      const tbody = document.getElementById('usersBody');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const ou = document.getElementById('ouFilter').value;
+      tbody.innerHTML = '';
+      const filtered = data.filter(u =>
+        (u.username.toLowerCase().includes(search) || u.full_name.toLowerCase().includes(search)) &&
+        (ou === '' || u.ou === ou)
+      );
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No results found.</td></tr>';
+        return;
+      }
+      filtered.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="checkbox" class="userCheckbox" data-username="${u.username}" style="display:none;" /></td>
+          <td>${u.username}</td>
+          <td>${u.full_name}</td>
+          <td><span class="badge">${u.ou || "Unknown"}</span></td>
+          <td>${u.last_login}</td>
+          <td>${u.pwd_set}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(data => {
+        allUsers = data;
+        const ouSet = new Set(data.map(u => u.ou).filter(Boolean));
+        const ouSel = document.getElementById('ouFilter');
+        ouSel.innerHTML = '<option value="">All OUs</option>';
+        ouSet.forEach(ou => {
+          const opt = document.createElement('option');
+          opt.value = ou;
+          opt.textContent = ou;
+          ouSel.appendChild(opt);
+        });
+        document.getElementById('searchInput').addEventListener('input', () => renderUsers(allUsers));
+        document.getElementById('ouFilter').addEventListener('change', () => renderUsers(allUsers));
+        renderUsers(allUsers);
+      })
+      .catch(err => {
+        alert("Error loading users.");
+        document.getElementById('usersBody').innerHTML = '<tr><td colspan="6">Could not load users.</td></tr>';
+      });
+  </script>
+</body>
+</html>
